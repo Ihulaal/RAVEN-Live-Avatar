@@ -2,6 +2,8 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 const p = new URLSearchParams(location.search);
 const room = (p.get('room') || '').replace(/[^A-Za-z0-9_-]/g,'').slice(0,90);
 const demo = p.get('demo') === '1';
+const isPreview = p.get('preview') === '1';
+let lastReceiverEcho=0;
 const canvas = document.querySelector('#wave'), ctx=canvas.getContext('2d');
 const W=1080,H=1920,N=48;
 const target = new Float32Array(N), smooth = new Float32Array(N);
@@ -16,7 +18,11 @@ if (!demo && room && cfg.supabaseUrl && cfg.publishableKey) {
       if(!Array.isArray(a))return;
       for(let i=0;i<N;i++)target[i]=Math.max(0,Math.min(1,Number(a[i])||0));
       last=performance.now();
-    }).subscribe();
+      if(performance.now()-lastReceiverEcho>4500){
+        lastReceiverEcho=performance.now();
+        channel.send({type:'broadcast',event:'receiver_seen',payload:{viewer:isPreview?'preview':'live'}}).catch(()=>{});
+      }
+    }).subscribe(status=>{if(status!=='SUBSCRIBED')console.warn('RAVEN receiver status',status);});
   } catch(e){console.error('RAVEN Realtime connection error',e);}
 }
 function frame(ms){

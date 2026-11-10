@@ -1,0 +1,17 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAVEN — Web Control Panel</title><link rel="stylesheet" href="styles.css"></head>
+<body><main class="main"><div class="brand">BLOOD RAVEN · LIVE TOOLS</div><h1>Live music avatar · Cloud control</h1>
+<p>Both this control panel and the portrait overlay run from GitHub Pages. Keep this tab open when streaming. Share the audio from a Chrome tab (or screen with system audio when available); only the sound-level bands are sent to your live overlay.</p>
+<section class="panel"><strong>Connection</strong> <span id="status" class="status">—</span><p id="feedback" class="warn"></p>
+<label class="field" for="room">Private-to-you room identifier (treat as a link secret)</label><input id="room" maxlength="90" placeholder="A unique randomly generated room"><div class="control-row" style="margin-top:12px"><button id="changeRoom">Save room / reconnect</button><button id="randomRoom">New room</button></div>
+<label class="field">Overlay link for TikTok LIVE Studio</label><div class="url mono" id="overlayUrl"></div><button class="primary" id="copyOverlay">Copy TikTok overlay URL</button><p class="small">Set the TikTok Link source to <strong>1080 × 1920</strong> with Custom Resolution enabled. Your overlay and the control page must use the same room.</p>
+</section>
+<section class="panel"><h2>Audio response</h2><div class="control-row"><button id="shareTab" class="primary">Start sharing music/tab audio</button><button id="microphone">Use microphone</button><button id="stop">Stop audio</button></div>
+<p class="small">In Chrome, choose the browser tab playing Spotify/YouTube and enable <strong>Share tab audio</strong>. If using the Spotify Windows app, screen/system-audio sharing may be offered on your Chrome version; otherwise use Spotify Web Player. Browser permission is required each time.</p>
+<div class="meter"><div id="meter" class="fill"></div></div><div class="small" id="meterLabel">Level: 0% · No audio sent</div>
+<label class="field" for="sensitivity">Wave sensitivity: <span id="sensVal">1.6</span>×</label><input type="range" id="sensitivity" min="0.5" max="4" step="0.1" value="1.6">
+<div class="control-row" style="margin-top:15px"><button id="demo" class="primary">Test wave for 12 seconds</button><button id="demoStop">Stop test</button></div>
+<p class="small">The test verifies remote control/communication; it does not prove your music capture is working.</p>
+</section>
+<section class="panel"><h2>Live preview</h2><div class="control-row"><iframe id="preview" class="preview" title="RAVEN avatar preview" loading="lazy"></iframe><div style="flex:1;min-width:200px"><p>The background and helmeted character remain motionless. Only the waveform moves behind the character.</p><p class="small">The preview is scaled down to portrait 9:16. TikTok receives the same overlay at full resolution.</p></div></div></section>
+<section class="panel"><h2>Before your first stream</h2><p class="small">Configure the <code>supabaseUrl</code> and <code>publishableKey</code> in <code>config.js</code>. This is a public broadcast channel: anyone with the room URL and public project information could send messages to it. Do not share your room link publicly, and never put a Supabase secret/service-role key in GitHub.</p></section>
+</main><script src="config.js"></script><script type="module" src="control.js"></script></body></html>

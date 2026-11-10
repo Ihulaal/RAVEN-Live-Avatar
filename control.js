@@ -9,7 +9,7 @@ let room = new URLSearchParams(location.search).get('room') || localStorage.getI
 room=normalizeRoom(room); if(!room)room=newRoom();
 function normalizeRoom(x){return String(x||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,90);}
 function newRoom(){return 'rv-'+Array.from(crypto.getRandomValues(new Uint8Array(14)),b=>b.toString(16).padStart(2,'0')).join('');}
-function overlayURL(){return new URL('index.html?room='+encodeURIComponent(room),location.href).toString();}
+function overlayURL(){return new URL('wave.html?room='+encodeURIComponent(room),location.href).toString();}
 function drawLink(){$('room').value=room;$('overlayUrl').textContent=overlayURL();$('preview').src=overlayURL();}
 function setStatus(t){$('status').textContent=t;}
 function feedback(t){$('feedback').textContent=t;}

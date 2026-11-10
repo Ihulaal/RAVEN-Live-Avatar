@@ -1,7 +1,6 @@
-/* Configure the public Supabase project URL and PUBLISHABLE key before upload.
-   Publishable keys are meant for frontends. NEVER put a secret/service-role key here.
-   The Realtime channel is public; treat the room identifier like an access link. */
+/* Public frontend configuration only. Never store a Supabase service_role or secret key here.
+   Realtime broadcast channels are public; room IDs are shared-link identifiers, not authentication. */
 window.RAVEN_CONFIG = {
-  supabaseUrl: '',
-  publishableKey: ''
+  supabaseUrl: 'https://ehejksdmnorlkrwnvaxi.supabase.co',
+  publishableKey: 'sb_publishable_G6p0sO1TyGP4_ZjY7wrdIA_EFdAzuT6'
 };

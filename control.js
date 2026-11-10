@@ -4,22 +4,35 @@ const cfg=window.RAVEN_CONFIG||{};
 const validConfig=/^https:\/\/[a-zA-Z0-9.-]+\.supabase\.co\/?$/.test(cfg.supabaseUrl||'') && (cfg.publishableKey||'').length>20;
 const client=validConfig?createClient(cfg.supabaseUrl,cfg.publishableKey,{auth:{persistSession:false,autoRefreshToken:false}}):null;
 let channel=null,ready=false,stream=null,context=null,source=null,analyser=null,ticker=null,demoTimeout=null,sending=false;
+let lastLiveReceiver=0,liveFrames=0,serverAckCount=0;
 const N=48;
 let room = new URLSearchParams(location.search).get('room') || localStorage.getItem('raven-room') || newRoom();
 room=normalizeRoom(room); if(!room)room=newRoom();
 function normalizeRoom(x){return String(x||'').replace(/[^a-zA-Z0-9_-]/g,'').slice(0,90);}
 function newRoom(){return 'rv-'+Array.from(crypto.getRandomValues(new Uint8Array(14)),b=>b.toString(16).padStart(2,'0')).join('');}
-function overlayURL(){return new URL('wave.html?room='+encodeURIComponent(room),location.href).toString();}
-function drawLink(){$('room').value=room;$('overlayUrl').textContent=overlayURL();$('preview').src=overlayURL();}
+function overlayURL(){return new URL('wave.html?room='+encodeURIComponent(room)+'&v=3',location.href).toString();}
+function drawLink(){$('room').value=room;$('overlayUrl').textContent=overlayURL();$('preview').src=overlayURL()+'&preview=1';}
 function setStatus(t){$('status').textContent=t;}
 function feedback(t){$('feedback').textContent=t;}
+function receiverStatus(){
+  const el=$('receiverStatus');if(!el)return;
+  const active=lastLiveReceiver&&Date.now()-lastLiveReceiver<14000;
+  el.textContent=active?'TikTok waveform receiving updates (confirmed)':'TikTok waveform not confirmed. Copy the CURRENT overlay URL into its Link source; the preview does not count.';
+}
+setInterval(receiverStatus,4000);
 function connect(){
-  ready=false;
+  ready=false;lastLiveReceiver=0;liveFrames=0;serverAckCount=0;receiverStatus();
   if(channel&&client)client.removeChannel(channel);
   channel=null;
   if(!client){setStatus('Setup needed');feedback('Enter your Supabase project URL and publishable key in config.js, then upload the changes to GitHub.');return;}
   setStatus('Connecting...');feedback('');
-  channel=client.channel('raven-'+room,{config:{private:false}});
+  channel=client.channel('raven-'+room,{config:{private:false,broadcast:{ack:true}}});
+  channel.on('broadcast',{event:'receiver_seen'},message=>{
+    if(message?.payload?.viewer==='live'){
+      lastLiveReceiver=Date.now();liveFrames++;
+      receiverStatus();
+    }
+  });
   channel.subscribe((state,error)=>{
     ready=state==='SUBSCRIBED';setStatus(state==='SUBSCRIBED'?'Connected':state);
     if(error)feedback('Connection error: '+String(error.message||error));
@@ -28,7 +41,11 @@ function connect(){
 async function send(bands){
   if(!ready||!channel||sending)return;
   sending=true;
-  try{await channel.send({type:'broadcast',event:'bands',payload:{bands}});}
+  try{
+    const result=await channel.send({type:'broadcast',event:'bands',payload:{bands}});
+    if(result!=='ok')feedback('Supabase did not acknowledge the wave update ('+result+'). Check Realtime settings and your connection.');
+    else serverAckCount++;
+  }
   catch(e){feedback('Broadcast error: '+e.message);}
   finally{sending=false;}
 }
@@ -47,7 +64,7 @@ function makeBands(){
     bands[i]=Number(v.toFixed(3));if(v>maxLevel)maxLevel=v;
   }
   $('meter').style.width=Math.round(maxLevel*100)+'%';
-  $('meterLabel').textContent='Level: '+Math.round(maxLevel*100)+'% · '+(ready?'Broadcasting':'Not connected');
+  $('meterLabel').textContent='Level: '+Math.round(maxLevel*100)+'% · '+(ready?'Connected, '+serverAckCount+' acknowledged sends':'Not connected');
   return bands;
 }
 async function startMedia(mode){

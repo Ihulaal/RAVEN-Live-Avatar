@@ -1,11 +1,26 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>RAVEN · LIVE Avatar Overlay</title>
-<style>
-html,body{width:100%;height:100%;margin:0;overflow:hidden;background:transparent}
-#scene{position:absolute;inset:0;overflow:hidden}
-#back,#wave,#front{position:absolute;inset:0;width:100%;height:100%;display:block}
-#back,#front{object-fit:fill;user-select:none;pointer-events:none}
-#wave{pointer-events:none}
-</style></head><body>
-<div id="scene"><img id="back" src="assets/background.png" alt=""><canvas id="wave" width="1080" height="1920"></canvas><img id="front" src="assets/character.png" alt=""></div>
-<script src="config.js"></script><script type="module" src="overlay.js"></script>
-</body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAVEN · Gaming Background</title>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    #background {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <img id="background" src="assets/background.png" alt="RAVEN gaming background">
+</body>
+</html>

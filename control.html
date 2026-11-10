@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>RAVEN — Music Wave Controls</title><link rel="stylesheet" href="styles.css"></head>
 <body><main class="main"><div class="brand">BLOOD RAVEN · LIVE TOOLS</div><h1>Live music waveform · Cloud control</h1>
 <p>The static gaming-room background stays separate from this transparent audio waveform. Both the controls and wave layer run from GitHub Pages. Keep this tab open when streaming. Share the audio from a Chrome tab (or screen with system audio when available); only the sound-level bands are sent to your live overlay.</p>
-<section class="panel"><strong>Connection</strong> <span id="status" class="status">—</span><p id="feedback" class="warn"></p>
+<section class="panel"><strong>Connection</strong> <span id="status" class="status">—</span><p id="feedback" class="warn"></p><p id="receiverStatus" class="small">Checking for live receiver…</p>
 <label class="field" for="room">Private-to-you room identifier (treat as a link secret)</label><input id="room" maxlength="90" placeholder="A unique randomly generated room"><div class="control-row" style="margin-top:12px"><button id="changeRoom">Save room / reconnect</button><button id="randomRoom">New room</button></div>
 <label class="field">Overlay link for TikTok LIVE Studio</label><div class="url mono" id="overlayUrl"></div><button class="primary" id="copyOverlay">Copy TikTok overlay URL</button><p class="small">Set the TikTok Link source to <strong>1080 × 1920</strong> with Custom Resolution enabled. Your wave overlay and control page must use the same room.</p>
 </section>

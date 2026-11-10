@@ -21,7 +21,7 @@ if (!demo && room && cfg.supabaseUrl && cfg.publishableKey) {
 }
 function frame(ms){
   if(demo){let t=ms/1000;for(let i=0;i<N;i++)target[i]=(0.15+.65*Math.pow(Math.sin(t*5.8+i*.39),2));last=ms;}
-  else if(ms-last>750)target.fill(0);
+  else if(ms-last>2800)target.fill(0);
   ctx.clearRect(0,0,W,H);
   // Only the canvas changes. Both image layers are permanent, unanimated PNGs.
   for(let i=0;i<N;i++){let d=target[i]-smooth[i];smooth[i]+=d*(d>0?.48:.19);}
